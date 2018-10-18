@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Models;
 using Models.Enumerations;
-using Newtonsoft.Json;
 
 namespace GwentDataRetriever
 {
@@ -13,6 +12,7 @@ namespace GwentDataRetriever
         public List<CardInfoDto> GetCardsInfo(IMaxPageProvider maxPageProvider, ICardDetailsFetcher cardDetailsFetcher, PageRangeDto pageRange)
         {
             if (maxPageProvider == null) throw new ArgumentNullException(nameof(maxPageProvider));
+            if (cardDetailsFetcher == null) throw new ArgumentNullException(nameof(cardDetailsFetcher));
             if (pageRange == null) throw new ArgumentNullException(nameof(pageRange));
 
             int actualMaxPage = maxPageProvider.GetMaxPage();
