@@ -8,13 +8,13 @@ namespace Models
     {
         public string Name { get; set; }
 
-        public Faction Faction { get; set; }
+        public Faction? Faction { get; set; }
 
-        public int Power { get; set; }
+        public int? Power { get; set; }
 
         public List<Row> Rows { get; set; }
 
-        public Type Type { get; set; }
+        public Type? Type { get; set; }
 
         public string Abilities { get; set; }
     }

@@ -4,8 +4,4 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NSoupCore" Version="1.0.0" />
-  </ItemGroup>
-
 </Project>

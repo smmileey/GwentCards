@@ -1,59 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Models;
 using Models.Enumerations;
 using Newtonsoft.Json;
-using NSoup;
 using NSoup.Nodes;
 using NSoup.Select;
-using Type = Models.Enumerations.Type;
 
 namespace GwentDataRetriever
 {
     public class CardsInfoRetriever
     {
+        public const int MinPage = 1;
 
-        public void GetCardsInfo()
+        public void GetCardsInfo(Document document, PageRangeDto pageRange, ICardDetailsFetcher cardDetailsFetcher)
         {
-            const string url = "https://www.gwentdb.com/cards?filter-display=1";
-            Document document = NSoupClient.Connect(url).Get();
-            Elements elements = document.Select(".card-row");
-            List<CardInfoDto> cards = new List<CardInfoDto>();
+            if (document == null) throw new ArgumentNullException(nameof(document));
+            if (pageRange == null) throw new ArgumentNullException(nameof(pageRange));
 
-            foreach (var element in elements)
+            int actualMaxPage = GetMaxPage(document.GetAllElements());
+            int minRange = pageRange.Min.HasValue && pageRange.Min.Value >= MinPage ? pageRange.Min.Value : MinPage;
+            int maxRange = pageRange.Max.HasValue && pageRange.Max.Value <= actualMaxPage ? pageRange.Max.Value : actualMaxPage;
+
+            List<CardInfoDto> cards = new List<CardInfoDto>();
+            for (int pageNumber = minRange; pageNumber < maxRange; pageNumber++)
             {
-                cards.Add(new CardInfoDto
-                {
-                    Name = element.GetElementsByClass("col-name")?.Select("a")?.First()?.OwnText(),
-                    Faction = Enum.Parse<Faction>(element.GetElementsByClass("col-faction")?.Text?.Replace(" ", string.Empty).Replace("'", string.Empty)),
-                    Power = int.Parse(element.GetElementsByClass("col-power")?.Text),
-                    Rows = GetRows(element.GetElementsByClass("col-row")?.First()).ToList(),
-                    Type = Enum.Parse<Type>(element.GetElementsByClass("col-type")?.Text),
-                    Abilities = GetAbilities(element.GetElementsByClass("col-abilities"))
-                });    
+                cards.AddRange(cardDetailsFetcher.GetCardDetails(pageNumber));
             }
 
             Console.Write(JsonConvert.SerializeObject(cards, Formatting.Indented));
             Console.ReadLine();
         }
 
-        private string GetAbilities(Elements abilities)
+        public int GetMaxPage(Elements elements)
         {
-            if (abilities == null) return null;
+            if (elements == null) throw new ArgumentNullException(nameof(elements));
 
-            Elements elements = abilities.Select("span");
-            return !string.IsNullOrEmpty(elements?.Text) ? elements.Text : elements?.Attr("title");
+            string paginationItems = elements.Select("li .b-pagination-item").Last.OwnText();
+            return int.Parse(paginationItems);
         }
 
-        private IEnumerable<Row> GetRows(Element element)
-        {
-            if (element == null) yield break;
-
-            foreach (var span in element.Select("span"))
-            {
-                yield return Enum.Parse<Row>(span.OwnText());
-            }
-        }
     }
 }
