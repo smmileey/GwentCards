@@ -8,9 +8,10 @@ namespace GwentDataRetriever
         public static void Main(string[] args)
         {
             string url = $"https://www.gwentdb.com/cards?filter-display=1";
+            var baseDocument = NSoupClient.Connect(url)?.Get();
 
             CardsInfoRetriever retriever = new CardsInfoRetriever();
-            retriever.GetCardsInfo(NSoupClient.Connect(url)?.Get(), new PageRangeDto(), new CardDetailsFetcher());
+            retriever.GetCardsInfo(new MaxPageProvider(baseDocument), new CardDetailsFetcher(), new PageRangeDto());
         }
     }
 }
