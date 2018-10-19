@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Models;
-using Models.Enumerations;
 
 namespace GwentDataRetriever
 {
@@ -19,11 +18,8 @@ namespace GwentDataRetriever
             int minRange = pageRange.Min.HasValue && pageRange.Min.Value >= MinPage ? pageRange.Min.Value : MinPage;
             int maxRange = pageRange.Max.HasValue && pageRange.Max.Value <= actualMaxPage ? pageRange.Max.Value : actualMaxPage;
 
-            List<CardInfoDto> cards = new List<CardInfoDto>();
-            for (int pageNumber = minRange; pageNumber <= maxRange; pageNumber++)
-            {
-                cards.AddRange(cardDetailsFetcher.GetCardDetails(pageNumber));
-            }
+            var cards = new List<CardInfoDto>();
+            for (int pageNumber = minRange; pageNumber <= maxRange; pageNumber++) cards.AddRange(cardDetailsFetcher.GetCardDetails(pageNumber));
 
             return cards;
         }

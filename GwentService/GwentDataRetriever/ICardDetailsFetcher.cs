@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Models;
 
-namespace Models.Enumerations
+namespace GwentDataRetriever
 {
     public interface ICardDetailsFetcher
     {

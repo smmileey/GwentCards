@@ -26,8 +26,8 @@ namespace Utilities
         private static readonly Dictionary<HtmlElementSelectors, CssSelectors> HtmlElementsSelectors =
             new Dictionary<HtmlElementSelectors, CssSelectors>
             {
-                {Enumerations.HtmlElementSelectors.A, new CssSelectors("a")  },
-                {Enumerations.HtmlElementSelectors.Span, new CssSelectors("span")  },
+                {HtmlElementSelectors.A, new CssSelectors("a")  },
+                {HtmlElementSelectors.Span, new CssSelectors("span")  },
             };
 
         public static ISelector Selector => _selector ?? (_selector = new Selector(AttributeSelectors, CardSelectors, HtmlElementsSelectors));
