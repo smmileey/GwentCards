@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Database;
 using Models;
 using Newtonsoft.Json;
 using NSoup;
@@ -10,16 +11,19 @@ namespace GwentDataRetriever
     {
         public static void Main(string[] args)
         {
-            string url = $"https://www.gwentdb.com/cards?filter-display=1";
-            var baseDocument = NSoupClient.Connect(url)?.Get();
+            ConnectionManager manager = new ConnectionManager();
+            manager.OpenConnection();
 
-            CardsInfoRetriever retriever = new CardsInfoRetriever();
-            List<CardInfoDto> cardInfoDtos = retriever.GetCardsInfo(new MaxPageProvider(new DocumentWrapper(baseDocument)), 
-                new CardDetailsFetcher(new PaginationItemProvider(new PageContentProvider()), new CardInfoProvider()), 
-                new PageRangeDto());
+            //string url = $"https://www.gwentdb.com/cards?filter-display=1";
+            //var baseDocument = NSoupClient.Connect(url)?.Get();
 
-            Console.WriteLine(JsonConvert.SerializeObject(cardInfoDtos, Formatting.Indented));
-            Console.ReadLine();
+            //CardsInfoRetriever retriever = new CardsInfoRetriever();
+            //List<CardInfoDto> cardInfoDtos = retriever.GetCardsInfo(new MaxPageProvider(new DocumentWrapper(baseDocument)), 
+            //    new CardDetailsFetcher(new PaginationItemProvider(new PageContentProvider()), new CardInfoProvider()), 
+            //    new PageRangeDto());
+
+            //Console.WriteLine(JsonConvert.SerializeObject(cardInfoDtos, Formatting.Indented));
+            //Console.ReadLine();
         }
     }
 }
